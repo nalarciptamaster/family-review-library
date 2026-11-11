@@ -4,74 +4,186 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>가족 복습</title>
-<meta name="theme-color" content="#2f6b4f">
+<meta name="theme-color" content="#fff8ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
-:root{--bg:#f6f4ee;--card:#fff;--ink:#1f2a24;--muted:#66706a;--line:#e2ded3;--accent:#2f6b4f;--good:#2f6b4f;--mid:#b7791f;--bad:#b23a3a}
-@media (prefers-color-scheme:dark){:root{--bg:#141815;--card:#1e2420;--ink:#e9ece8;--muted:#9aa49e;--line:#2d3530;--accent:#7cc4a0;--good:#7cc4a0;--mid:#e0b25c;--bad:#e07a7a}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:env(safe-area-inset-top) 16px 24px}
-main{max-width:520px;margin:0 auto}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 0 8px}
-h1{font-size:20px;margin:0}
-.stats{display:flex;gap:14px;color:var(--muted);font-size:15px}
-.stats b{color:var(--ink);font-variant-numeric:tabular-nums}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 20px;margin-top:12px;min-height:240px;display:flex;flex-direction:column;justify-content:center;gap:14px}
-.count{color:var(--muted);font-size:14px}
-.prompt{font-size:24px;font-weight:600}
-.say{color:var(--muted)}
-.answer{font-size:20px;border-top:1px solid var(--line);padding-top:14px}
-.answer small{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
-button{font:inherit;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:14px;min-height:52px;cursor:pointer}
-button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
-.row{display:grid;gap:10px;margin-top:14px}
-.grades{grid-template-columns:repeat(3,1fr)}
-.grades button{font-size:16px}
-.knew{border-color:var(--good)}.hint{border-color:var(--mid)}.forgot{border-color:var(--bad)}
-.note{color:var(--muted);font-size:14px;margin-top:16px;text-align:center}
-.child .prompt{font-size:30px}.child button{min-height:64px;font-size:19px}
-.again{color:var(--mid);font-size:14px;font-weight:600}
-.shield{color:var(--muted)}
-.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.match button{min-height:72px;font-size:17px;line-height:1.3}
-.match button.sel{border-color:var(--accent);border-width:3px}
-.match button.ok{visibility:hidden}
-.match button.no{border-color:var(--bad)}
+:root{
+  --bg:#fff8ef;--surface:#ffffff;--sunk:#f6ecdf;--ink:#2b2520;--muted:#7a6d62;--line:#ecdfcf;
+  --accent:#e2603f;--accent-ink:#ffffff;--good:#2f8a5f;--good-bg:#e3f4ea;--bad:#c4453a;--bad-bg:#fbe5e1;--star:#f0a92a;
+  --radius:20px;--shadow:0 2px 0 var(--line);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1c1814;--surface:#27211c;--sunk:#322a23;--ink:#f3ebe2;--muted:#b4a698;--line:#3d342c;
+  --accent:#f27a5a;--accent-ink:#1c1814;--good:#5cc28f;--good-bg:#1f3a2c;--bad:#f0806f;--bad-bg:#43241f;--star:#f5bd4f;
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:17px/1.5 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  padding:calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 24px);min-height:100dvh}
+main{max-width:480px;margin:0 auto}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.big{display:block;width:100%;min-height:60px;border-radius:16px;background:var(--accent);color:var(--accent-ink);font-size:20px;font-weight:700;box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 70%,#000)}
+.big:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 70%,#000)}
+.big[disabled]{opacity:.45;cursor:default}
+.ghost{display:block;width:100%;min-height:52px;border-radius:16px;border:2px solid var(--line);background:var(--surface);font-weight:600}
+.muted{color:var(--muted)}
+.top{display:flex;align-items:center;gap:10px;padding:6px 0 14px}
+.me{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;border-radius:999px;background:var(--surface);border:2px solid var(--line)}
+.face{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--sunk)}
+.me b{font-size:16px}.me small{display:block;font-size:12px;color:var(--muted);line-height:1.1}
+.chips{margin-left:auto;display:flex;gap:8px}
+.chip{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:999px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-variant-numeric:tabular-nums}
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.today h2{margin:0 0 4px;font-size:22px}
+.today ul{list-style:none;padding:0;margin:14px 0 18px;display:grid;gap:8px}
+.today li{display:flex;gap:10px;align-items:flex-start}
+.today li span:first-child{width:28px;text-align:center;font-size:20px}
+h3{font-size:15px;color:var(--muted);margin:26px 4px 10px;font-weight:600}
+.path{display:grid;gap:8px}
+.unit{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;border-radius:16px;background:var(--surface);border:2px solid var(--line)}
+.unit .dot{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;background:var(--sunk);color:var(--muted)}
+.unit.done .dot{background:var(--good);color:#fff}
+.unit.now{border-color:var(--accent)}.unit.now .dot{background:var(--accent);color:var(--accent-ink)}
+.unit.later{opacity:.55}
+.unit small{display:block;color:var(--muted);font-size:13px;line-height:1.3}
+.note{text-align:center;color:var(--muted);font-size:13px;margin-top:18px;min-height:1.5em}
+/* who are you */
+.who{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.who button{padding:18px 10px;border-radius:var(--radius);background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);display:grid;justify-items:center;gap:6px}
+.who .face{width:64px;height:64px;font-size:38px}
+.who b{font-size:18px}.who small{color:var(--muted)}
+/* session */
+.bar{display:flex;align-items:center;gap:12px;padding:4px 0 18px}
+.bar .x{width:44px;height:44px;border-radius:50%;font-size:22px;color:var(--muted)}
+.prog{flex:1;height:14px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--good);border-radius:999px;transition:width .3s}
+.ask{font-size:15px;color:var(--muted);margin:0 2px 12px;font-weight:600}
+.stage{display:grid;gap:14px;justify-items:center;text-align:center;padding:10px 0 6px}
+.pic{font-size:96px;line-height:1.1}
+.say{display:inline-flex;align-items:center;gap:10px;font-size:24px;font-weight:700;padding:10px 18px;border-radius:16px;background:var(--sunk)}
+.say .spk{font-size:22px}
+.ko{font-size:19px;color:var(--muted)}
+.speaker{width:96px;height:96px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:44px;box-shadow:0 5px 0 color-mix(in srgb,var(--accent) 70%,#000)}
+.speaker.small{width:56px;height:56px;font-size:26px;box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 70%,#000)}
+.prompt{font-size:22px;font-weight:700}
+.opts{display:grid;gap:10px;margin-top:14px}
+.opts.pics{grid-template-columns:1fr 1fr}
+.opt{min-height:56px;padding:12px 14px;border-radius:16px;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);font-size:18px;text-align:left}
+.opts.pics .opt{min-height:120px;font-size:64px;text-align:center}
+.opt.ok{border-color:var(--good);background:var(--good-bg)}
+.opt.no{border-color:var(--bad);background:var(--bad-bg)}
+.opt[disabled]{cursor:default}
+.line{min-height:64px;border-bottom:2px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;padding:8px 0;align-content:flex-start}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0}
+.tile{padding:10px 14px;border-radius:12px;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);font-size:18px;font-weight:600}
+.tile.used{visibility:hidden}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.pairs .opt{min-height:68px;font-size:16px;text-align:center}
+.pairs .opt.sel{border-color:var(--accent)}
+.pairs .opt.gone{visibility:hidden}
+.foot{position:sticky;bottom:0;padding-top:16px;background:linear-gradient(transparent,var(--bg) 30%)}
+.sheet{border-radius:var(--radius);padding:16px 18px;margin-top:16px;display:grid;gap:10px}
+.sheet.ok{background:var(--good-bg);color:var(--good)}
+.sheet.no{background:var(--bad-bg);color:var(--bad)}
+.sheet b{font-size:20px}.sheet p{margin:0;color:var(--ink)}
+.sheet .big{background:currentColor;box-shadow:none}
+.sheet .big span{color:var(--surface)}
+.mic{margin-top:4px}
+.heard{font-size:15px;color:var(--muted);min-height:1.5em}
+.tip{font-size:15px;background:var(--sunk);border-radius:14px;padding:10px 14px;text-align:left}
+.cheer{font-size:84px;line-height:1}
+.stars{font-size:28px;font-weight:800;color:var(--star)}
+/* child mode: everything bigger, fewer words */
+.child .say{font-size:30px}
+.child .pic{font-size:120px}
+.child .opts.pics .opt{min-height:140px;font-size:76px}
+.child .big{min-height:72px;font-size:24px}
+.child .tile{font-size:24px;padding:14px 18px}
+@media (prefers-reduced-motion:no-preference){.pop{animation:pop .35s ease-out}@keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}}
 </style>
 </head>
 <body>
-<main id="app">
-<header><h1 id="who">가족 복습</h1><div class="stats"><span>별 <b id="stars">0</b></span><span>연속 <b id="streak">0</b>일</span><span class="shield" id="shieldBox" hidden>보호권 <b id="shields">0</b></span></div></header>
-<section id="view"></section>
-<p class="note" id="sync"></p>
-</main>
+<main id="app"></main>
 <script>
-const $=id=>document.getElementById(id);
-const NAMES={Jay:'Jay','wife':'엄마',Yuna:'유나'},LANGS={en:'영어',id:'인도네시아어',zh:'중국어'};
-const STARS={knew:3,hint:2,forgot:1};
-const MAX_AGAIN=2;      // extra rounds for cards that were not "knew"; then stop, the next lesson takes over
-const SHIELD_EVERY=7,SHIELD_MAX=2; // one streak shield per 7 days in a row
+"use strict";
+// ---------- settings ----------
+const API_DEFAULT='https://script.google.com/macros/s/AKfycbx-eaqlptbjeemV6zTOtY8RacG0K8jqIXIMjmcTfRtfb9t64V5iodCp7iIjUwHq1OuJ/exec';
+const PEOPLE=[
+  {code:'Yuna-en',name:'유나',sub:'영어',face:'🐰'},
+  {code:'Jay-en',name:'아빠',sub:'영어',face:'🧔'},
+  {code:'Jay-id',name:'아빠',sub:'인도네시아어',face:'🧔'},
+  {code:'wife-en',name:'엄마',sub:'영어',face:'👩'}];
+const LIMITS={child:{review:5},adult:{review:8}};
+const SHIELD_EVERY=7,SHIELD_MAX=2;
+
 // localStorage can throw in private mode; the app still runs, it just forgets on close.
-const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 const day=(ms=Date.now())=>new Date(ms).toLocaleDateString('sv');
-const today=()=>day();
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+function h(tag,props,...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(props||{})){
+  if(k==='on')for(const[n,f]of Object.entries(v))e.addEventListener(n,f);else if(k==='class')e.className=v;else if(v!==false&&v!=null)e.setAttribute(k,v===true?'':v)}
+  for(const c of kids.flat())if(c!=null&&c!==false)e.append(c.nodeType?c:document.createTextNode(c));return e}
+const app=document.getElementById('app');
+function show(...nodes){app.replaceChildren(...nodes.filter(Boolean));scrollTo(0,0)}
 
-// Setup link: index.html#api=<apps script url>&k=<family key>&u=<code>. Saved, then removed from the address bar.
-const h=new URLSearchParams(location.hash.slice(1));
-if(h.get('api')&&h.get('k')&&h.get('u')){store.set('cfg',{api:h.get('api'),k:h.get('k'),u:h.get('u')});history.replaceState(null,'',location.pathname)}
-const cfg=store.get('cfg',null);
-// deck items: {c:card, round:0 first look | 1.. again}. Only the first look is sent to the PC (FSRS wants one answer a day).
-let deck=[],pos=0,allCards=[];
+// ---------- setup: family link #k=<key> (old links #api=..&k=..&u=.. still work) ----------
+(function readLink(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  if(!p.get('k'))return;
+  store.set('cfg',{api:p.get('api')||API_DEFAULT,k:p.get('k')});
+  if(p.get('u'))store.set('me',p.get('u'));
+  history.replaceState(null,'',location.pathname+location.search);
+})();
+(function migrateV1(){ // app 1.1 kept the code inside cfg and the queue without a code
+  const c=store.get('cfg',null);if(!c||!c.u)return;
+  store.set('me',store.get('me',c.u));
+  const q=store.get('queue',[]).map(r=>r.code?r:{...r,code:c.u});store.set('queue',q);
+  delete c.u;store.set('cfg',c);
+})();
+const cfg=()=>store.get('cfg',null);
+const person=code=>PEOPLE.find(p=>p.code===code);
 
-function stats(){
-  const s=store.get('stats',{stars:0,streak:0,last:'',shields:0});s.shields=s.shields||0;
-  $('stars').textContent=s.stars;$('streak').textContent=s.streak;$('shields').textContent=s.shields;$('shieldBox').hidden=!s.shields;return s}
-function render(html){$('view').innerHTML=html}
+// ---------- sound ----------
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()}catch{}}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function speak(text,lang,slow){
+  if(!('speechSynthesis' in window)||!text)return;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;
+    const base=lang.slice(0,2),v=voices.find(v=>v.lang.replace('_','-')===lang)||voices.find(v=>v.lang.startsWith(base));if(v)u.voice=v;
+    u.rate=slow?0.75:0.92;speechSynthesis.speak(u)}catch{}
+}
+const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
 
-// Streak: counts days with at least one answer. Missing exactly one day spends a shield instead of resetting.
+// ---------- data ----------
+async function fetchData(code){
+  const c=cfg();let data=store.get('data:'+code,null);
+  if(c){try{const r=await fetch(c.api+'?code='+encodeURIComponent(code)+'&k='+encodeURIComponent(c.k));const j=await r.json();
+    if(j&&j.ok===false){return {data,error:j.error}}
+    if(j&&j.code===code){data=j;store.set('data:'+code,j)}}catch{}}
+  return {data};
+}
+function learnedSet(code,data){return new Set([...(data?.learned||[]),...store.get('learned:'+code,[])])}
+function unitState(data,learned){
+  const units=data?.units||[];let now=-1;
+  const done=units.map(u=>u.items.every(i=>learned.has(i.id)));
+  now=done.indexOf(false);return {units,done,now};
+}
+function allItems(data){
+  const out=[];for(const u of data?.units||[])for(const i of u.items)out.push({...i,target:'app-'+i.id,unit:u.id});
+  for(const r of data?.review||[])if(!out.some(o=>o.target===r.id))out.push({...r,target:r.id});
+  return out;
+}
+
+// ---------- stats ----------
+function stats(code){const s=store.get('stats:'+code,{stars:0,streak:0,last:'',shields:0});return s}
+// Streak counts days with a finished session. Missing exactly one day spends a shield instead of resetting.
 function bumpStreak(s,now=Date.now()){
   const t=day(now);if(s.last===t)return s;
   const y=day(now-864e5),y2=day(now-2*864e5);
@@ -82,87 +194,229 @@ function bumpStreak(s,now=Date.now()){
   s.last=t;return s;
 }
 
-async function load(){
-  if(!cfg){render('<div class="card"><p class="prompt">설정 링크로 열어 주세요</p><p class="say">PC가 보낸 링크를 한 번 열면 다음부터는 바로 시작해요.</p></div>');return}
-  const [l,g]=cfg.u.split('-');$('who').textContent=(NAMES[l]||l)+' · '+(LANGS[g]||g);
-  if(l==='Yuna')document.body.classList.add('child');
-  stats();flush();
-  let data=store.get('cards:'+cfg.u,null);
-  try{const r=await fetch(cfg.api+'?code='+encodeURIComponent(cfg.u)+'&k='+encodeURIComponent(cfg.k));const j=await r.json();if(j.cards){data=j;store.set('cards:'+cfg.u,j)}}
-  catch{} // offline: use the last cards this phone saw
-  allCards=data?.cards||[];
-  const doneToday=new Set(store.get('done:'+today(),[]));
-  deck=allCards.filter(c=>!doneToday.has(c.target)).map(c=>({c,round:0}));pos=0;
-  deck.length?card():finished(allCards.length);
+// ---------- results: wait on the phone until the upload works; the PC ignores ids it already has ----------
+let flushing=false;
+async function flush(){
+  const c=cfg(),q=store.get('queue',[]);
+  if(flushing||!c||!q.length){note();return}
+  flushing=true;note();
+  try{
+    for(const code of [...new Set(q.map(r=>r.code))]){
+      const batch=q.filter(r=>r.code===code).slice(0,150);
+      const r=await fetch(c.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:c.k,code,results:batch.map(({code,...x})=>x)})});
+      const j=await r.json();
+      if(j.ok){const sent=new Set(batch.map(x=>x.id));store.set('queue',store.get('queue',[]).filter(x=>!sent.has(x.id)))}
+    }
+  }catch{}
+  flushing=false;note();
+}
+function note(){const el=document.getElementById('note');if(!el)return;const n=store.get('queue',[]).length;
+  el.textContent=flushing?'결과 보내는 중…':n?`인터넷이 되면 결과 ${n}개를 보낼게요`:''}
+addEventListener('online',flush);
+
+// ---------- screens ----------
+function noLink(){
+  show(h('div',{class:'panel today pop',style:'margin-top:40px;text-align:center'},
+    h('div',{class:'cheer'},'🔑'),h('h2',{},'가족 링크로 열어 주세요'),
+    h('p',{class:'muted'},'아빠가 보내 준 링크를 한 번만 열면, 다음부터는 홈 화면에서 바로 시작해요.')));
+}
+function pickWho(){
+  show(h('div',{class:'top'},h('b',{style:'font-size:20px'},'누가 공부해요?')),
+    h('div',{class:'who'},PEOPLE.map(p=>h('button',{on:{click:()=>{store.set('me',p.code);home()}}},
+      h('span',{class:'face'},p.face),h('b',{},p.name),h('small',{},p.sub)))));
+}
+function topBar(code){
+  const p=person(code),s=stats(code);
+  return h('div',{class:'top'},
+    h('button',{class:'me','aria-label':'공부하는 사람 바꾸기',on:{click:pickWho}},h('span',{class:'face'},p.face),h('span',{},h('b',{},p.name),h('small',{},p.sub))),
+    h('div',{class:'chips'},h('span',{class:'chip','aria-label':'별'},'⭐ ',String(s.stars)),h('span',{class:'chip','aria-label':'연속 공부한 날'},'🔥 ',String(s.streak)),
+      s.shields?h('span',{class:'chip','aria-label':'연속 보호권'},'🛡️ ',String(s.shields)):null));
+}
+async function home(){
+  const c=cfg();if(!c)return noLink();
+  const code=store.get('me',null);if(!person(code))return pickWho();
+  document.body.classList.toggle('child',code==='Yuna-en');
+  show(topBar(code),h('div',{class:'panel'},h('p',{class:'muted'},'불러오는 중…')));
+  flush();
+  const {data,error}=await fetchData(code);
+  if(error==='key')return show(topBar(code),h('div',{class:'panel today'},h('h2',{},'링크가 바뀌었어요'),h('p',{class:'muted'},'아빠에게 새 가족 링크를 받아 한 번 열어 주세요.')));
+  if(!data)return show(topBar(code),h('div',{class:'panel today'},h('h2',{},'인터넷을 연결해 주세요'),h('p',{class:'muted'},'처음 한 번은 인터넷이 필요해요.'),h('button',{class:'ghost',on:{click:home}},'다시 해 보기')));
+  const learned=learnedSet(code,data),st=unitState(data,learned),child=!!data.child;
+  const doneToday=store.get('done:'+code,'')===day();
+  const reviewN=Math.min((data.review||[]).length,child?LIMITS.child.review:LIMITS.adult.review);
+  const next=st.units[st.now];
+  const plan=[];
+  if(reviewN&&!doneToday)plan.push(h('li',{},h('span',{},'🔁'),h('span',{},`복습 ${reviewN}개`)));
+  if(next)plan.push(h('li',{},h('span',{},'✨'),h('span',{},h('b',{},`${st.now+1}단원 ${next.title}`),h('br'),h('span',{class:'muted'},next.can_do||''))));
+  if(!plan.length)plan.push(h('li',{},h('span',{},'🎉'),h('span',{},'코스를 다 끝냈어요! 지난 단원을 골라 연습할 수 있어요.')));
+  const card=h('section',{class:'panel today pop'},
+    h('h2',{},doneToday?'오늘 공부 끝! 잘했어요':(child?'오늘의 놀이':'오늘의 5분')),
+    doneToday?h('p',{class:'muted'},'내일 또 만나요. 더 하고 싶으면 아래를 눌러요.'):null,
+    h('ul',{},plan),
+    h('button',{class:'big',disabled:!next&&(doneToday||!reviewN),on:{click:()=>start(code,data,{review:!doneToday,unit:st.now})}},doneToday?(next?'다음 단원 미리 하기':'한 번 더 하기'):'시작하기'));
+  const path=h('div',{class:'path'},st.units.map((u,n)=>{
+    const cls=st.done[n]?'done':n===st.now?'now':'later';
+    return h('button',{class:'unit '+cls,disabled:cls==='later',on:{click:()=>start(code,data,{review:false,unit:n,practice:st.done[n]})}},
+      h('span',{class:'dot'},st.done[n]?'✓':String(n+1)),h('span',{},h('b',{},u.title),h('small',{},u.can_do||'')))}));
+  show(topBar(code),card,st.units.length?h('h3',{},data.title||'코스'):null,path,h('p',{class:'note',id:'note'}));
+  note();
 }
 
-function card(){
-  const {c,round}=deck[pos];
-  render(`<div class="card"><div class="count">${pos+1} / ${deck.length}${round?' <span class="again">다시 한 번</span>':''}</div><div class="prompt"></div><div class="say">소리 내서 말해 봐요</div></div>
-  <div class="row"><button class="primary" id="show">답 보기</button></div>`);
-  document.querySelector('.prompt').textContent=c.prompt;
-  $('show').onclick=reveal;
+// ---------- session ----------
+// One step = one screen. Graded steps decide the item's result for the PC:
+// right first try = knew, wrong then right on the retry at the end = hint, wrong on the retry = forgot.
+function exerciseFor(item,child,n){
+  const words=item.t.split(' ').length;
+  if(child)return words>=2&&words<=4&&n%3===2?'order':'hear_pic';
+  const kinds=['hear_meaning','see_meaning'];if(words>=3)kinds.push('order');
+  return kinds[n%kinds.length];
 }
-function reveal(){
-  const {c}=deck[pos],box=document.querySelector('.card'),a=document.createElement('div');a.className='answer';
-  const label=document.createElement('small');label.textContent=c.example?'지난번에 맞힌 말':c.question?'선생님 질문':'';
-  a.append(label,document.createTextNode(c.example||c.question||'다음 수업에서 선생님과 다시 해 봐요'));box.append(a);
-  document.querySelector('.row').outerHTML=`<div class="row grades"><button class="knew" data-g="knew">알았어</button><button class="hint" data-g="hint">헷갈려</button><button class="forgot" data-g="forgot">몰랐어</button></div>`;
-  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>grade(b.dataset.g));
+function buildSession(data,opts){
+  const child=!!data.child,steps=[],pool=allItems(data);
+  if(opts.review){
+    const due=(data.review||[]).filter(r=>r.t&&(!child||r.pic)).slice(0,child?LIMITS.child.review:LIMITS.adult.review);
+    due.forEach((r,n)=>steps.push({kind:exerciseFor(r,child,n),item:{...r,target:r.id},graded:true}));
+  }
+  const unit=data.units?.[opts.unit];
+  if(unit){
+    const items=unit.items.map(i=>({...i,target:'app-'+i.id}));
+    items.forEach(i=>steps.push({kind:'learn',item:i}));
+    if(!opts.practice&&unit.tip&&!child)steps.push({kind:'tip',text:unit.tip});
+    shuffle(items).forEach((i,n)=>steps.push({kind:exerciseFor(i,child,n+1),item:i,graded:!opts.practice}));
+    if(!child&&items.length>=4)steps.push({kind:'match',items:shuffle(items).slice(0,4)});
+  }
+  return {steps,pool,child,lang:data.lang||'en-US',unit,results:new Map()};
 }
-function grade(g){
-  const {c,round}=deck[pos];
-  if(round===0){
-    const q=store.get('queue',[]);
-    q.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),target:c.target,grade:g,at:new Date().toISOString()});store.set('queue',q);
-    const d=store.get('done:'+today(),[]);d.push(c.target);store.set('done:'+today(),d);
-    const s=bumpStreak(stats());s.stars+=STARS[g];store.set('stats',s);stats();flush();
-  }else if(g==='knew'){const s=stats();s.stars+=1;store.set('stats',s);stats()}
-  // Not sure yet: see it again at the end of this sitting, like a teacher circling back.
-  if(g!=='knew'&&round<MAX_AGAIN)deck.push({c,round:round+1});
-  ++pos<deck.length?card():finished(1);
+let S=null;
+function start(code,data,opts){
+  S={...buildSession(data,opts),code,data,opts,pos:0,stars:0};
+  if(!S.steps.length)return home();
+  speak('',S.lang);step();
 }
-function finished(had){
-  const s=stats(),shieldMsg=s.usedShield===today()?'<p class="say">어제 하루 쉬었지만 보호권으로 연속 기록을 지켰어요.</p>':'';
-  const pairs=allCards.filter(c=>c.example);
-  render(`<div class="card"><p class="prompt">${had?'오늘 복습 끝!':'오늘은 복습할 카드가 없어요'}</p><p class="say">${had?'결과는 선생님께 보내져서 다음 수업에 쓰여요.':'다음 수업을 하면 새 카드가 생겨요.'}</p>${shieldMsg}</div>
-  ${pairs.length>=3?'<div class="row"><button class="primary" id="play">짝 맞추기 놀이</button></div>':''}`);
-  if(pairs.length>=3)$('play').onclick=()=>matchGame(pairs);
+function quit(){S=null;try{speechSynthesis.cancel()}catch{}home()}
+function frame(ask,...body){
+  const pct=Math.round(100*S.pos/S.steps.length);
+  return [h('div',{class:'bar'},h('button',{class:'x','aria-label':'그만하기',on:{click:quit}},'✕'),h('div',{class:'prog'},h('i',{style:`width:${pct}%`}))),
+    ask?h('p',{class:'ask'},ask):null,...body];
 }
+function next(){S.pos++;S.pos<S.steps.length?step():finish()}
+function step(){
+  const st=S.steps[S.pos];
+  ({learn,tip,hear_pic,hear_meaning,see_meaning,order,match})[st.kind](st);
+}
+function sayBtn(item,cls){return h('button',{class:'speaker'+(cls?' '+cls:''),'aria-label':'다시 듣기',on:{click:()=>speak(item.t,S.lang,S.child)}},'🔊')}
+function learn(st){
+  const it=st.item;
+  const heard=h('div',{class:'heard'});
+  const mic=Rec?h('button',{class:'ghost mic',on:{click:()=>listen(it.t,heard)}},'🎤 따라 말해 보기'):null;
+  show(...frame(S.child?null:'새 표현',h('div',{class:'stage pop'},
+    it.pic?h('div',{class:'pic'},it.pic):null,
+    h('button',{class:'say',on:{click:()=>speak(it.t,S.lang,S.child)}},h('span',{class:'spk'},'🔊'),it.t),
+    h('div',{class:'ko'},it.ko),mic,heard),
+    h('div',{class:'foot'},h('button',{class:'big',on:{click:next}},'다음'))));
+  speak(it.t,S.lang,S.child);
+}
+// Speaking is practice only: browsers hear accents poorly, so it never changes the result sent to the PC.
+function listen(target,out){
+  try{const r=new Rec();r.lang=S.lang;r.interimResults=false;r.maxAlternatives=3;out.textContent='듣고 있어요…';
+    r.onresult=e=>{const alts=[...e.results[0]].map(a=>a.transcript);const ok=alts.some(a=>close(a,target));
+      out.textContent=(ok?'👏 잘했어요! ':'들린 말: ')+alts[0];if(ok)S.stars++};
+    r.onerror=()=>{out.textContent='마이크를 쓸 수 없어요. 소리 내서 한 번 말해 보세요.'};r.start()}catch{out.textContent='마이크를 쓸 수 없어요.'}
+}
+const norm=s=>s.toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,' ').trim();
+function close(a,b){a=norm(a);b=norm(b);if(a===b)return true;const wa=new Set(a.split(' ')),wb=b.split(' ');return wb.filter(w=>wa.has(w)).length/wb.length>=0.8}
+function tip(st){show(...frame('알아 두기',h('div',{class:'stage pop'},h('div',{class:'cheer'},'💡'),h('p',{class:'tip'},st.text)),h('div',{class:'foot'},h('button',{class:'big',on:{click:next}},'알겠어요'))))}
 
-// Matching game: pair each Korean prompt with the words the learner said. Practice only, nothing is sent.
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function matchGame(pairs){
-  const pick=shuffle(pairs).slice(0,4);
-  const tiles=shuffle(pick.flatMap((c,i)=>[{i,text:c.prompt},{i,text:c.example}]));
-  render(`<div class="count" style="margin-top:12px">같은 뜻끼리 두 개를 눌러요</div><div class="match"></div>`);
-  const box=document.querySelector('.match');let sel=null,left=pick.length,miss=0;
-  tiles.forEach(t=>{const b=document.createElement('button');b.textContent=t.text;b.onclick=()=>{
-    if(b.classList.contains('ok')||b===sel)return;
+function distractors(item,n,key){
+  const seen=new Set([item[key]]),out=[];
+  const same=S.pool.filter(o=>o.unit&&o.unit===item.unit),rest=S.pool.filter(o=>!(o.unit&&o.unit===item.unit));
+  for(const o of [...shuffle(same),...shuffle(rest)]){if(out.length>=n)break;if(!o[key]||seen.has(o[key])||o.t===item.t)continue;seen.add(o[key]);out.push(o)}
+  return out;
+}
+function choice(st,ask,stage,key,big){
+  const it=st.item,opts=shuffle([it,...distractors(it,3,key)]);
+  const box=h('div',{class:'opts'+(big?' pics':'')});
+  opts.forEach(o=>box.append(h('button',{class:'opt','aria-label':big?o.ko||o.t:null,on:{click:e=>answer(st,o===it,e.currentTarget,box)}},o[key])));
+  show(...frame(ask,stage,box,h('div',{class:'foot',id:'foot'})));
+}
+function hear_pic(st){choice(st,S.child?null:'듣고 알맞은 그림을 골라요',h('div',{class:'stage pop'},sayBtn(st.item)),'pic',true);speak(st.item.t,S.lang,true);
+  // No tap for a while: say the word again, like a teacher repeating the question.
+  if(S.child)setTimeout(()=>{if(S&&S.steps[S.pos]===st&&!document.getElementById('sheet'))speak(st.item.t,S.lang,true)},9000)}
+function hear_meaning(st){choice(st,'듣고 뜻을 골라요',h('div',{class:'stage pop'},sayBtn(st.item)),'ko');speak(st.item.t,S.lang)}
+function see_meaning(st){choice(st,'알맞은 말을 골라요',h('div',{class:'stage pop'},st.item.pic?h('div',{class:'pic',style:'font-size:64px'},st.item.pic):null,h('div',{class:'prompt'},st.item.ko)),'t')}
+function order(st){
+  const it=st.item,want=it.t.replace(/[.!?]+$/,'').split(' ');
+  const line=h('div',{class:'line','aria-label':'만든 문장'}),tiles=h('div',{class:'tiles'}),picked=[];
+  const check=h('button',{class:'big',disabled:true,on:{click:()=>{answer(st,picked.map(p=>p.w).join(' ')===want.join(' '),null,tiles);check.remove()}}},'확인');
+  shuffle(want.map((w,n)=>({w,n}))).forEach(p=>{
+    const t=h('button',{class:'tile',on:{click:()=>{if(t.classList.contains('used'))return;t.classList.add('used');picked.push(p);
+      const back=h('button',{class:'tile',on:{click:()=>{if(S.steps[S.pos]!==st||document.getElementById('sheet'))return;back.remove();t.classList.remove('used');picked.splice(picked.indexOf(p),1);check.disabled=picked.length!==want.length}}},p.w);
+      line.append(back);if(S.child)speak(p.w,S.lang,true);check.disabled=picked.length!==want.length}}},p.w);tiles.append(t)});
+  show(...frame(S.child?'순서대로 눌러요':'순서대로 문장을 만들어요',
+    h('div',{class:'stage pop'},it.pic?h('div',{class:'pic',style:'font-size:56px'},it.pic):null,h('div',{class:'prompt'},it.ko),S.child?sayBtn(it,'small'):null),
+    line,tiles,h('div',{class:'foot',id:'foot'},check)));
+  if(S.child)speak(it.t,S.lang,true);
+}
+function match(st){
+  const cards=shuffle(st.items.flatMap((i,n)=>[{n,text:i.t,say:i.t},{n,text:i.ko}]));
+  let sel=null,left=st.items.length,miss=0;
+  const box=h('div',{class:'pairs'});
+  cards.forEach(c=>{const b=h('button',{class:'opt',on:{click:()=>{
+    if(b.classList.contains('gone')||b===sel)return;if(c.say)speak(c.say,S.lang);
     box.querySelectorAll('.no').forEach(x=>x.classList.remove('no'));
     if(!sel){sel=b;b.classList.add('sel');return}
     const a=sel;sel=null;a.classList.remove('sel');
-    if(tiles[[...box.children].indexOf(a)].i===t.i){a.classList.add('ok');b.classList.add('ok');
-      if(--left===0){const s=stats();const bonus=miss?1:2;s.stars+=bonus;store.set('stats',s);stats();
-        render(`<div class="card"><p class="prompt">다 맞췄어요!</p><p class="say">별 ${bonus}개 더 받았어요.</p></div><div class="row"><button id="again">한 번 더</button></div>`);$('again').onclick=()=>matchGame(pairs)}}
-    else{miss++;a.classList.add('no');b.classList.add('no')}
-  };box.append(b)});
+    if(a._c.n===c.n&&a._c!==c){a.classList.add('gone');b.classList.add('gone');if(--left===0){S.stars+=miss?1:2;next()}}
+    else{miss++;a.classList.add('no');b.classList.add('no')}}}},c.text);b._c=c;box.append(b)});
+  show(...frame('같은 뜻끼리 짝을 지어요',box));
+}
+function answer(st,ok,btn,box){
+  if(document.getElementById('sheet'))return;
+  // A child gets a second try on the same screen: the wrong picture fades and the word plays again.
+  if(S.child&&st.kind==='hear_pic'&&!ok&&!st.tried){st.tried=true;btn.classList.add('no');btn.disabled=true;speak(st.item.t,S.lang,true);return}
+  box.querySelectorAll('button').forEach(b=>b.disabled=true);
+  if(btn)btn.classList.add(ok?'ok':'no');
+  if(!ok&&box.classList.contains('opts'))[...box.children].forEach(b=>{if(b.textContent===st.item[st.kind==='see_meaning'?'t':st.kind==='hear_pic'?'pic':'ko'])b.classList.add('ok')});
+  if(st.graded){
+    const prev=S.results.get(st.item.target);
+    if(st.tried){if(!prev)S.results.set(st.item.target,ok?'hint':'forgot')}
+    else if(!prev){S.results.set(st.item.target,ok?'knew':'pending');if(!ok)S.steps.push({...st,retry:true})}
+    else if(prev==='pending'&&st.retry)S.results.set(st.item.target,ok?'hint':'forgot');
+  }
+  if(ok)S.stars++;
+  speak(st.item.t,S.lang,S.child);
+  const it=st.item;
+  const sheet=h('div',{class:'sheet pop '+(ok?'ok':'no'),id:'sheet',role:'status'},
+    h('b',{},ok?(S.child?'🎉 맞았어요!':'정답이에요'):(S.child?'괜찮아, 다시 해 보자':'아쉬워요. 정답은')),
+    h('p',{},it.pic&&!S.child?it.pic+' ':'',h('b',{},it.t),' ',h('span',{class:'muted'},it.ko)),
+    h('button',{class:'big',on:{click:next}},h('span',{},'계속')));
+  const foot=document.getElementById('foot');foot.replaceChildren(sheet);sheet.querySelector('.big').focus();
+}
+function finish(){
+  const {code,opts,unit}=S,now=new Date().toISOString(),q=store.get('queue',[]),learned=new Set(store.get('learned:'+code,[]));
+  for(const [target,grade] of S.results){
+    q.push({code,id:uid(),target,grade:grade==='pending'?'forgot':grade,at:now});
+    if(target.startsWith('app-'))learned.add(target.slice(4));
+  }
+  // A practice replay of a finished unit is not graded; a new unit counts as learned even if every answer was wrong.
+  if(unit&&!opts.practice)unit.items.forEach(i=>learned.add(i.id));
+  store.set('queue',q);store.set('learned:'+code,[...learned]);
+  const s=stats(code);const firstToday=s.last!==day();
+  if(!opts.practice){bumpStreak(s);store.set('done:'+code,day())}
+  s.stars+=S.stars;store.set('stats:'+code,s);
+  const right=[...S.results.values()].filter(g=>g==='knew').length,total=S.results.size;
+  const shield=s.usedShield===day()&&firstToday?h('p',{class:'muted'},'어제 쉬었지만 🛡️ 보호권으로 연속 기록을 지켰어요.'):null;
+  show(h('div',{class:'stage pop',style:'padding-top:48px'},
+    h('div',{class:'cheer'},S.child?'🌟':'🎉'),h('h2',{style:'margin:0'},S.child?'최고야, 유나!':'오늘 공부 끝!'),
+    h('div',{class:'stars'},'⭐ +'+S.stars),
+    total?h('p',{class:'muted'},`${total}개 중 ${right}개를 한 번에 맞혔어요.`+(right<total?' 틀린 건 다음에 또 나와요.':'')):null,
+    !opts.practice?h('p',{class:'muted'},`🔥 ${s.streak}일 연속`):null,shield),
+    h('div',{class:'foot'},h('button',{class:'big',on:{click:()=>{S=null;home()}}},'처음으로')));
+  flush();
 }
 
-// Results wait on the phone until the upload succeeds; the PC ignores ids it already has.
-async function flush(){
-  const q=store.get('queue',[]);
-  if(!q.length||!cfg){$('sync').textContent='';return}
-  $('sync').textContent='보낼 결과 '+q.length+'개';
-  try{
-    const r=await fetch(cfg.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:cfg.k,code:cfg.u,results:q})});
-    const j=await r.json();
-    if(j.ok){const sent=new Set(q.map(x=>x.id));store.set('queue',store.get('queue',[]).filter(x=>!sent.has(x.id)));$('sync').textContent='결과를 보냈어요'}
-  }catch{$('sync').textContent='인터넷이 되면 결과를 보낼게요 ('+q.length+'개)'}
-}
-addEventListener('online',flush);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-load();
+home();
 </script>
 </body>
 </html>
