@@ -133,11 +133,14 @@ const app=document.getElementById('app');
 function show(...nodes){app.replaceChildren(...nodes.filter(Boolean));scrollTo(0,0)}
 
 // ---------- setup: family link #k=<key> (old links #api=..&k=..&u=.. still work) ----------
+let launch=null;
 (function readLink(){
   const p=new URLSearchParams(location.hash.slice(1));
   if(!p.get('k'))return;
   store.set('cfg',{api:p.get('api')||API_DEFAULT,k:p.get('k')});
   if(p.get('u'))store.set('me',p.get('u'));
+  // WhatsApp links say what to open: m=daily (today's set) or m=lesson&l=<lesson id> (that lesson's review).
+  if(p.get('u')&&p.get('m'))launch={code:p.get('u'),m:p.get('m'),l:p.get('l')||''};
   history.replaceState(null,'',location.pathname+location.search);
 })();
 (function migrateV1(){ // app 1.1 kept the code inside cfg and the queue without a code
@@ -253,6 +256,10 @@ async function home(){
   if(!data)return show(topBar(code),h('div',{class:'panel today'},h('h2',{},error==='offline'?'인터넷을 연결해 주세요':'문제를 못 받았어요'),
     h('p',{class:'muted'},WHY[error]||'잠시 뒤 다시 해 봐요.'),h('button',{class:'ghost',on:{click:home}},'다시 해 보기')));
   const learned=learnedSet(code,data),st=unitState(data,learned),child=!!data.child;
+  if(launch&&launch.code===code){const go=launch;launch=null;
+    if(go.m==='lesson'&&data.lessons?.[go.l]?.length)return start(code,data,{lesson:go.l});
+    if(go.m==='daily'&&(st.now>=0||(data.review||[]).length))return start(code,data,{review:true,unit:st.now});
+  }
   const doneToday=store.get('done:'+code,'')===day();
   const reviewN=Math.min((data.review||[]).length,child?LIMITS.child.review:LIMITS.adult.review);
   const next=st.units[st.now];
@@ -286,6 +293,11 @@ function exerciseFor(item,child,n){
 }
 function buildSession(data,opts){
   const child=!!data.child,steps=[],pool=allItems(data);
+  if(opts.lesson){ // "📚 수업 복습" link: that lesson's expressions, the missed ones first (the PC orders them)
+    for(const c of data.lessons[opts.lesson])if(!pool.some(o=>o.target===c.id))pool.push({...c,target:c.id});
+    data.lessons[opts.lesson].filter(c=>!child||c.pic).forEach((c,n)=>steps.push({kind:exerciseFor(c,child,n),item:{...c,target:c.id},graded:true}));
+    return {steps,pool,child,lang:data.lang||'en-US',unit:null,results:new Map()};
+  }
   if(opts.review){
     const due=(data.review||[]).filter(r=>r.t&&(!child||r.pic)).slice(0,child?LIMITS.child.review:LIMITS.adult.review);
     due.forEach((r,n)=>steps.push({kind:exerciseFor(r,child,n),item:{...r,target:r.id},graded:true}));
