@@ -162,13 +162,23 @@ function speak(text,lang,slow){
 const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
 
 // ---------- data ----------
+// error: key (link changed) | relay (server answered with an error page or odd data) | timeout | offline.
+// An Apps Script error page has no CORS header, so the browser reports it like a network failure: only call it
+// "offline" when the phone itself says so.
 async function fetchData(code){
-  const c=cfg();let data=store.get('data:'+code,null);
-  if(c){try{const r=await fetch(c.api+'?code='+encodeURIComponent(code)+'&k='+encodeURIComponent(c.k));const j=await r.json();
-    if(j&&j.ok===false){return {data,error:j.error}}
-    if(j&&j.code===code){data=j;store.set('data:'+code,j)}}catch{}}
-  return {data};
+  const c=cfg();let data=store.get('data:'+code,null),error=null;
+  if(!c)return {data,error};
+  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),20000);
+  try{
+    const r=await fetch(c.api+'?code='+encodeURIComponent(code)+'&k='+encodeURIComponent(c.k),{signal:ctl.signal});
+    let j=null;try{j=JSON.parse(await r.text())}catch{}
+    if(!j)error='relay';else if(j.ok===false)error=j.error==='key'?'key':'relay';
+    else if(j.code===code){data=j;store.set('data:'+code,j)}else error='relay';
+  }catch(e){error=e.name==='AbortError'?'timeout':navigator.onLine===false?'offline':'relay'}
+  finally{clearTimeout(timer)}
+  return {data,error};
 }
+const WHY={relay:'복습 서버가 지금 응답하지 않아요. 아빠에게 알려 주세요.',timeout:'복습 서버가 너무 늦게 답해요. 잠시 뒤 다시 해 봐요.',offline:'인터넷이 끊겨 있어요. 연결한 뒤 다시 해 봐요.'};
 function learnedSet(code,data){return new Set([...(data?.learned||[]),...store.get('learned:'+code,[])])}
 function unitState(data,learned){
   const units=data?.units||[];let now=-1;
@@ -240,7 +250,8 @@ async function home(){
   flush();
   const {data,error}=await fetchData(code);
   if(error==='key')return show(topBar(code),h('div',{class:'panel today'},h('h2',{},'링크가 바뀌었어요'),h('p',{class:'muted'},'아빠에게 새 가족 링크를 받아 한 번 열어 주세요.')));
-  if(!data)return show(topBar(code),h('div',{class:'panel today'},h('h2',{},'인터넷을 연결해 주세요'),h('p',{class:'muted'},'처음 한 번은 인터넷이 필요해요.'),h('button',{class:'ghost',on:{click:home}},'다시 해 보기')));
+  if(!data)return show(topBar(code),h('div',{class:'panel today'},h('h2',{},error==='offline'?'인터넷을 연결해 주세요':'문제를 못 받았어요'),
+    h('p',{class:'muted'},WHY[error]||'잠시 뒤 다시 해 봐요.'),h('button',{class:'ghost',on:{click:home}},'다시 해 보기')));
   const learned=learnedSet(code,data),st=unitState(data,learned),child=!!data.child;
   const doneToday=store.get('done:'+code,'')===day();
   const reviewN=Math.min((data.review||[]).length,child?LIMITS.child.review:LIMITS.adult.review);
@@ -260,6 +271,8 @@ async function home(){
       h('span',{class:'dot'},st.done[n]?'✓':String(n+1)),h('span',{},h('b',{},u.title),h('small',{},u.can_do||'')))}));
   show(topBar(code),card,st.units.length?h('h3',{},data.title||'코스'):null,path,h('p',{class:'note',id:'note'}));
   note();
+  // Working from the copy this phone saved last time: say why the fresh one did not come.
+  if(error){const n=document.getElementById('note');if(n&&!n.textContent)n.textContent='지난번 문제로 해요. '+(WHY[error]||'')}
 }
 
 // ---------- session ----------
