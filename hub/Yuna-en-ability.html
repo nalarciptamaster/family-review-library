@@ -1,8 +1,8 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="color-scheme" content="light dark"><title>유나 영어 · 실력 분석</title><style>
 :root{--bg:#f7f6f1;--card:#fff;--ink:#16302e;--ink2:#4c5f5b;--mute:#6f7f7a;--line:#e2e6df;--acc:#00876a;--acc2:#b7791f;--accbg:#e3f1ec;
---kid:#c9820f;--kidbg:#fff8ea;--lo:#b3402e;--mid:#d9a441;--track:#e9ede7}
+--kid:#c9820f;--kidbg:#fff8ea;--lo:#b3402e;--mid:#d9a441;--track:#e9ede7;--on-acc:#fff}
 @media(prefers-color-scheme:dark){:root{--bg:#121a19;--card:#1a2523;--ink:#e6eeeb;--ink2:#b5c4bf;--mute:#8fa09a;--line:#2b3936;--acc:#21a083;
---acc2:#c28526;--accbg:#1d3a33;--kid:#e0a643;--kidbg:#262117;--lo:#d0604c;--mid:#c9a04a;--track:#2b3936}}
+--acc2:#c28526;--accbg:#1d3a33;--kid:#e0a643;--kidbg:#262117;--lo:#d0604c;--mid:#c9a04a;--track:#2b3936;--on-acc:#0b1a17}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,"Malgun Gothic",sans-serif}
 main{max-width:900px;margin:auto;padding:14px 16px 40px}body.wide main{max-width:1320px}a{color:var(--acc)}
 h1{font-size:23px;line-height:1.25;margin:2px 0;letter-spacing:-.3px}h2{font-size:15px;margin:0 0 8px}main>h2{font-size:17px;margin:24px 0 10px}
@@ -18,28 +18,28 @@ h3{font-size:15px;margin:0 0 4px}.sub{color:var(--mute);margin:0;font-size:13px}
 @media(min-width:1200px){.people{grid-template-columns:repeat(4,minmax(0,1fr))}.bottom{grid-template-columns:1.2fr 1fr 1fr}}
 .p{display:flex;flex-direction:column;gap:7px;border-top:4px solid var(--acc)}.p.kid{border-top-color:var(--kid);background:var(--kidbg)}
 .ph{display:flex;justify-content:space-between;align-items:center;gap:6px}.ph h2{margin:0;font-size:17px}.ph h2 a{color:inherit;text-decoration:none}
-.chip{font-size:12px;padding:1px 8px;border-radius:10px;background:var(--accbg);white-space:nowrap}.chip.g{background:var(--track);color:var(--mute)}
+.chip{font-size:12px;padding:1px 8px;border-radius:10px;background:var(--accbg);white-space:nowrap}.chip.g{background:var(--track);color:var(--ink2)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 8px;margin:0}.stats dt{font-size:11px;color:var(--mute);line-height:1.3}
 .stats dd{margin:0;font-size:17px;font-weight:650;line-height:1.3}.stats dd small{font-size:11px;font-weight:400;color:var(--mute)}
 svg.spark{display:block;width:100%;height:auto}.a{fill:var(--acc)}.b{fill:var(--acc2)}.base{stroke:var(--line)}.hit{fill:transparent}
 .cap{font-size:11px;color:var(--mute);display:flex;justify-content:space-between;gap:6px}
 .seg{display:flex;gap:2px;height:8px;margin:3px 0 2px}.seg i{display:block;border-radius:4px}.lo{background:var(--lo)}.md{background:var(--mid)}.hi{background:var(--acc)}.trk{background:var(--track)}
 .line{font-size:13px;margin:0;color:var(--ink2)}.line b{color:var(--ink);font-weight:600;margin-right:4px}
-.btn{display:block;text-align:center;padding:8px 10px;border-radius:9px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;font-size:14px}
+.btn{display:block;text-align:center;padding:8px 10px;border-radius:9px;background:var(--acc);color:var(--on-acc);text-decoration:none;font-weight:600;font-size:14px}
 .kid .btn{background:var(--kid);color:#1d1300}.links{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12px}
 .key{font-size:12px;color:var(--ink2);margin:0 0 8px}.key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 4px 0 10px;vertical-align:-1px}
 .feed{list-style:none;margin:0;padding:0}.feed li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:13px}
 .feed li:first-child{border-top:0}.feed li.one{grid-template-columns:minmax(0,1fr)}.feed .d{color:var(--mute)}.who{font-size:11px;color:var(--mute);margin-left:4px;white-space:nowrap}
 .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;max-width:340px}.cal span{border-radius:4px;font-size:10px;text-align:center;line-height:24px;color:var(--ink2)}
 .cal .h{color:var(--mute)}.c0{background:var(--track)}.c1{background:color-mix(in srgb,var(--acc) 30%,var(--card))}.c2{background:color-mix(in srgb,var(--acc) 62%,var(--card))}
-.cal .c3{background:var(--acc);color:#fff}.cal .now{outline:2px solid var(--ink);outline-offset:-2px}
+.cal .c3{background:var(--acc);color:var(--on-acc)}.cal .now{outline:2px solid var(--ink);outline-offset:-2px}
 .rec{list-style:none;margin:0;padding:0}.rec li{font-size:13px;padding:4px 0}.rec b{font-weight:600}
 .bars{display:flex;align-items:flex-end;gap:3px;height:110px;border-bottom:1px solid var(--line)}
 .blab{display:flex;gap:3px;font-size:10px;color:var(--mute)}.blab span{flex:1;text-align:center}
 .legend{font-size:12px;color:var(--ink2)}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 10px;background:var(--acc)}
 .meter{height:10px;border-radius:5px;background:var(--track);overflow:hidden;display:flex;gap:2px}.meter i{display:block}.r1{background:var(--lo)}.r2{background:var(--mid)}.r3{background:var(--acc)}
 nav.tabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0 12px;padding-bottom:4px}nav.tabs a{flex:none;padding:6px 12px;border:1px solid var(--line);border-radius:16px;text-decoration:none;font-size:13px;background:var(--card)}
-nav.tabs a[aria-current=page]{background:var(--acc);color:#fff;border-color:var(--acc)}
+nav.tabs a[aria-current=page]{background:var(--acc);color:var(--on-acc);border-color:var(--acc)}
 ul.list{padding-left:20px;margin:6px 0}ul.list li{margin:4px 0}.time{list-style:none;padding:0;margin:0;border-left:2px solid var(--line)}.time li{position:relative;padding:0 0 14px 18px}
 .time li:before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--acc)}.time .d{font-size:13px;color:var(--mute)}
 .tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:9px;background:var(--track);margin-left:4px}.est{color:var(--acc2);font-weight:650}
