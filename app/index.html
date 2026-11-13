@@ -165,7 +165,8 @@ function show(...nodes){app.replaceChildren(...nodes.filter(Boolean));scrollTo(0
 let launch=null;
 (function readLink(){
   const p=new URLSearchParams(location.hash.slice(1));
-  if(!p.get('k'))return;
+  // The public library links to #m=stats with no key: open the saved person's 내 기록 if this browser has the family link.
+  if(!p.get('k')){if(p.get('m')==='stats'&&store.get('me',null)){launch={code:store.get('me',null),m:'stats',l:''};history.replaceState(null,'',location.pathname+location.search)}return}
   store.set('cfg',{api:p.get('api')||API_DEFAULT,k:p.get('k')});
   if(p.get('u'))store.set('me',p.get('u'));
   // WhatsApp links say what to open: m=daily (today's set) or m=lesson&l=<lesson id> (that lesson's review).
@@ -262,7 +263,7 @@ addEventListener('online',flush);
 function noLink(){
   show(h('div',{class:'panel today pop',style:'margin-top:40px;text-align:center'},
     h('div',{class:'cheer'},'🔑'),h('h2',{},'가족 링크로 열어 주세요'),
-    h('p',{class:'muted'},'아빠가 보내 준 링크를 한 번만 열면, 다음부터는 홈 화면에서 바로 시작해요.')));
+    h('p',{class:'muted'},'WhatsApp으로 받은 복습 링크를 이 브라우저에서 한 번만 열면, 다음부터는 여기서 바로 내 기록과 복습이 열려요.')));
 }
 function pickWho(){
   show(h('div',{class:'top'},h('b',{style:'font-size:20px'},'누가 공부해요?')),
