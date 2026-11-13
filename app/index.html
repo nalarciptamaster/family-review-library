@@ -104,6 +104,35 @@ h3{font-size:15px;color:var(--muted);margin:26px 4px 10px;font-weight:600}
 .child .opts.pics .opt{min-height:140px;font-size:76px}
 .child .big{min-height:72px;font-size:24px}
 .child .tile{font-size:24px;padding:14px 18px}
+/* 내 기록 */
+.dash{display:grid;gap:14px}
+.dash h2{margin:0;font-size:22px}
+.tiles2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile2{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.tile2 small{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.tile2 b{display:block;font-size:34px;line-height:1.15;font-variant-numeric:tabular-nums}
+.tile2 span{font-size:14px;color:var(--muted)}
+.chart{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:130px;margin-top:10px}
+.col{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.col i{font-style:normal;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-height:14px}
+.stack{width:100%;max-width:22px;border-radius:6px 6px 3px 3px;overflow:hidden;display:flex;flex-direction:column;background:color-mix(in srgb,var(--accent) 45%,transparent)}
+.stack em{display:block;background:var(--good);margin-top:auto}
+.col.empty .stack{background:var(--sunk);height:4px!important}
+.col u{text-decoration:none;font-size:11px;color:var(--muted);white-space:nowrap}
+.col.today u{color:var(--ink);font-weight:800}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;background:var(--good)}
+.legend span+span::before{background:color-mix(in srgb,var(--accent) 45%,transparent)}
+.miss{display:grid;gap:8px;margin:12px 0}
+.miss li{display:flex;align-items:center;gap:10px;list-style:none}
+.miss .pic{font-size:30px;width:40px;text-align:center}
+.miss p{margin:0;flex:1;line-height:1.3}.miss p small{display:block;color:var(--muted);font-size:14px}
+.fam{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.fam th{color:var(--muted);font-weight:600;font-size:12px;text-align:right;padding:4px}
+.fam td{padding:8px 4px;border-top:2px solid var(--line);text-align:right;white-space:nowrap}
+.fam td:first-child{white-space:normal}.fam td:first-child small{display:block;color:var(--muted);font-size:12px}
+.fam td:first-child,.fam th:first-child{text-align:left}
+.child .tile2 b{font-size:44px}
 @media (prefers-reduced-motion:no-preference){.pop{animation:pop .35s ease-out}@keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}}
 </style>
 </head>
@@ -218,7 +247,9 @@ async function flush(){
       const batch=q.filter(r=>r.code===code).slice(0,150);
       const r=await fetch(c.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:c.k,code,results:batch.map(({code,...x})=>x)})});
       const j=await r.json();
-      if(j.ok){const sent=new Set(batch.map(x=>x.id));store.set('queue',store.get('queue',[]).filter(x=>!sent.has(x.id)))}
+      if(j.ok){const sent=new Set(batch.map(x=>x.id));store.set('queue',store.get('queue',[]).filter(x=>!sent.has(x.id)));
+        // Kept 3 days so 내 기록 still shows them until the PC export has them (it runs every 15 min).
+        const keep=Date.now()-3*864e5;store.set('sent:'+code,[...store.get('sent:'+code,[]),...batch].filter(x=>Date.parse(x.at)>keep).slice(-300))}
     }
   }catch{}
   flushing=false;note();
@@ -259,6 +290,7 @@ async function home(){
   if(launch&&launch.code===code){const go=launch;launch=null;
     if(go.m==='lesson'&&data.lessons?.[go.l]?.length)return start(code,data,{lesson:go.l});
     if(go.m==='daily'&&(st.now>=0||(data.review||[]).length))return start(code,data,{review:true,unit:st.now});
+    if(go.m==='stats')return dashboard(code,data);
   }
   const doneToday=store.get('done:'+code,'')===day();
   const reviewN=Math.min((data.review||[]).length,child?LIMITS.child.review:LIMITS.adult.review);
@@ -276,7 +308,8 @@ async function home(){
     const cls=st.done[n]?'done':n===st.now?'now':'later';
     return h('button',{class:'unit '+cls,disabled:cls==='later',on:{click:()=>start(code,data,{review:false,unit:n,practice:st.done[n]})}},
       h('span',{class:'dot'},st.done[n]?'✓':String(n+1)),h('span',{},h('b',{},u.title),h('small',{},u.can_do||'')))}));
-  show(topBar(code),card,st.units.length?h('h3',{},data.title||'코스'):null,path,h('p',{class:'note',id:'note'}));
+  const statsBtn=h('button',{class:'ghost',style:'margin-top:12px',on:{click:()=>dashboard(code,data)}},'📊 내 기록');
+  show(topBar(code),card,statsBtn,st.units.length?h('h3',{},data.title||'코스'):null,path,h('p',{class:'note',id:'note'}));
   note();
   // Working from the copy this phone saved last time: say why the fresh one did not come.
   if(error){const n=document.getElementById('note');if(n&&!n.textContent)n.textContent='지난번 문제로 해요. '+(WHY[error]||'')}
@@ -293,6 +326,13 @@ function exerciseFor(item,child,n){
 }
 function buildSession(data,opts){
   const child=!!data.child,steps=[],pool=allItems(data);
+  if(opts.items){ // "이것만 연습" from 내 기록: hear it once, then one exercise each; never graded
+    const items=opts.items.map(c=>({...c,target:c.id}));
+    for(const c of items)if(!pool.some(o=>o.target===c.target))pool.push(c);
+    items.forEach(i=>steps.push({kind:'learn',item:i}));
+    shuffle(items).forEach((i,n)=>{if(!child||i.pic)steps.push({kind:exerciseFor(i,child,n),item:i,graded:false})});
+    return {steps,pool,child,lang:data.lang||'en-US',unit:null,results:new Map()};
+  }
   if(opts.lesson){ // "📚 수업 복습" link: that lesson's expressions, the missed ones first (the PC orders them)
     for(const c of data.lessons[opts.lesson])if(!pool.some(o=>o.target===c.id))pool.push({...c,target:c.id});
     data.lessons[opts.lesson].filter(c=>!child||c.pic).forEach((c,n)=>steps.push({kind:exerciseFor(c,child,n),item:{...c,target:c.id},graded:true}));
@@ -436,8 +476,69 @@ function finish(){
     h('div',{class:'stars'},'⭐ +'+S.stars),
     total?h('p',{class:'muted'},`${total}개 중 ${right}개를 한 번에 맞혔어요.`+(right<total?' 틀린 건 다음에 또 나와요.':'')):null,
     !opts.practice?h('p',{class:'muted'},`🔥 ${s.streak}일 연속`):null,shield),
-    h('div',{class:'foot'},h('button',{class:'big',on:{click:()=>{S=null;home()}}},'처음으로')));
+    h('div',{class:'foot'},h('button',{class:'big',on:{click:()=>{S=null;home()}}},'처음으로'),
+      h('button',{class:'ghost',style:'margin-top:10px',on:{click:()=>{const d=S.data;S=null;dashboard(code,d)}}},'📊 내 기록')));
   flush();
+}
+
+// ---------- 내 기록 ----------
+// The PC file has answers up to stats.upto; this phone adds its own newer ones (waiting or just sent) so a finished session shows at once.
+function localResults(code,data){
+  const upto=Date.parse(data?.stats?.upto||'')||0,seen=new Set(),out=[];
+  for(const r of [...store.get('queue',[]).filter(r=>r.code===code),...store.get('sent:'+code,[])])
+    if(!seen.has(r.id)&&Date.parse(r.at)>upto){seen.add(r.id);out.push(r)}
+  return out;
+}
+// run = days in a row up to the last practice day; it is still alive if that day is today or yesterday.
+function streakNow(run,last,today){
+  const t=day(),y=day(Date.now()-864e5);
+  if(today)return last===t?run:last===y?run+1:1;
+  return last===t||last===y?run:0;
+}
+function dlabel(iso){return iso===day()?'오늘':iso===day(Date.now()-864e5)?'어제':iso?Number(iso.slice(5,7))+'/'+Number(iso.slice(8)):'-'}
+const pct=(ok,n)=>n?Math.round(100*ok/n)+'%':'-';
+function dashboard(code,data){
+  document.body.classList.toggle('child',code==='Yuna-en');
+  const st=data?.stats||{},child=!!data?.child,lang=data?.lang||'en-US';
+  const per=new Map((st.days||[]).map(([d,n,ok])=>[d,{n,ok}]));
+  for(const r of localResults(code,data)){const d=day(Date.parse(r.at)),v=per.get(d)||{n:0,ok:0};v.n++;v.ok+=r.grade==='knew';per.set(d,v)}
+  const days=[];for(let k=13;k>=0;k--){const d=day(Date.now()-k*864e5);days.push({d,...(per.get(d)||{n:0,ok:0})})}
+  const today=days[13],week=days.slice(7).reduce((a,x)=>({n:a.n+x.n,ok:a.ok+x.ok}),{n:0,ok:0});
+  const streak=streakNow(st.run||0,st.last||'',today.n>0),last=today.n?day():st.last||'';
+  const max=Math.max(1,...days.map(x=>x.n));
+  const chart=h('div',{class:'chart',role:'img','aria-label':'최근 14일 푼 문제 수'},days.map((x,n)=>h('div',{class:'col'+(x.n?'':' empty')+(n===13?' today':''),title:`${dlabel(x.d)} ${x.n}문제, 한 번에 ${x.ok}개`},
+    h('i',{},x.n?String(x.n):''),h('div',{class:'stack',style:`height:${Math.round(96*x.n/max)}px`},h('em',{style:`height:${x.n?Math.round(100*x.ok/x.n):0}%`})),
+    h('u',{},n===13?'오늘':String(Number(x.d.slice(8)))))));
+  const tile=(label,big,small)=>h('div',{class:'tile2'},h('small',{},label),h('b',{},big),small?h('span',{},small):null);
+  const missed=st.missed||[];
+  const missBox=h('section',{class:'panel'},h('h2',{},child?'다시 해 볼 말':'자주 틀린 표현'),
+    missed.length?h('ul',{class:'miss'},missed.map(m=>h('li',{},m.pic?h('span',{class:'pic'},m.pic):null,
+      h('p',{},h('b',{},m.t),h('small',{},m.ko+(child?'':` · ${m.miss}번 틀림`))),
+      h('button',{class:'speaker small','aria-label':m.t+' 듣기',on:{click:()=>speak(m.t,lang,child)}},'🔊')))):h('p',{class:'muted'},child?'틀린 말이 없어요! 최고야 🌟':'아직 틀린 표현이 없어요.'),
+    missed.length&&data?h('button',{class:'big',on:{click:()=>start(code,data,{items:missed,practice:true})}},'이것만 연습'):null);
+  const chartBox=h('section',{class:'panel'},h('h2',{},child?'날마다 푼 문제':'최근 14일'),chart,
+    child?null:h('div',{class:'legend'},h('span',{},'한 번에 맞힘'),h('span',{},'다시 풀었거나 틀림')));
+  let body;
+  if(child)body=[h('section',{class:'panel today pop',style:'text-align:center'},h('div',{class:'cheer'},today.ok?'🌟':'🐰'),
+      h('div',{class:'stars',style:'font-size:40px'},'⭐ '+today.ok),h('p',{style:'font-size:20px;margin:6px 0 0'},today.n?`오늘 ${today.ok}개 맞혔어요!`:'오늘은 아직 안 했어요'),
+      h('p',{style:'font-size:22px;font-weight:800;margin:10px 0 0'},streak?`🔥 ${streak}일 연속`:'오늘 시작해 볼까? 🔥')),chartBox,missBox];
+  else{
+    const due=st.due,cal=st.calibration;
+    body=[h('div',{class:'tiles2 pop'},tile('오늘',String(today.n),`한 번에 ${today.ok}개`),tile('이번 주',String(week.n),`한 번에 ${week.ok}개`),
+        tile('정답률 (이번 주)',pct(week.ok,week.n),'처음에 맞힌 비율'),tile('연속 공부',`🔥 ${streak}`,last?'마지막 '+dlabel(last):'아직 없음')),
+      chartBox,missBox,
+      due?h('section',{class:'panel'},h('h2',{},'다음 복습'),h('div',{class:'tiles2',style:'margin-top:12px'},tile('오늘',String(due.today),'장'),tile('내일',String(due.tomorrow),'장'),
+        tile('이번 주',String(due.week),'장 (오늘 포함)'),tile('수업',String(st.lessons||0),'번')),
+        cal?h('p',{class:'muted',style:'font-size:14px;margin:12px 0 0'},`기억 예측 ${Math.round(cal.predicted*100)}% · 실제 ${Math.round(cal.actual*100)}% (복습 ${cal.reviews}번). 차이가 작을수록 복습 간격이 잘 맞아요.`):null):null];
+    if(st.family?.length)body.push(h('section',{class:'panel'},h('h2',{},'👨‍👩‍👧 가족 한눈에'),
+      h('table',{class:'fam',style:'margin-top:10px'},h('tr',{},['','이번 주','정답','연속','마지막','복습'].map(t=>h('th',{},t))),
+        st.family.map(f=>{const p=person(f.code)||{face:'🙂',name:f.code,sub:''},mine=f.code===code;
+          const n=mine?week.n:f.n,ok=mine?week.ok:f.ok,s=mine?streak:streakNow(f.run,f.last,false),l=mine?last:f.last;
+          return h('tr',{},h('td',{},p.face+' ',h('b',{},p.name),h('small',{},p.sub)),h('td',{},String(n)),h('td',{},pct(ok,n)),h('td',{},'🔥'+s),h('td',{},dlabel(l)),h('td',{},String(f.due)))}))));
+  }
+  show(h('div',{class:'bar'},h('button',{class:'x','aria-label':'처음으로',on:{click:()=>{home()}}},'✕'),h('h2',{style:'margin:0;font-size:22px'},'📊 내 기록')),
+    h('div',{class:'dash'},...body,!st.days?h('p',{class:'note'},'PC 기록이 아직 없어 이 휴대폰 기록만 보여요.'):null),
+    h('div',{style:'margin-top:16px'},h('button',{class:'big',on:{click:()=>{home()}}},'처음으로')));  // not sticky: it would cover 이것만 연습
 }
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
