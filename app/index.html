@@ -13,12 +13,12 @@
 <style>
 :root{
   --bg:#fff8ef;--surface:#ffffff;--sunk:#f6ecdf;--ink:#2b2520;--muted:#7a6d62;--line:#ecdfcf;
-  --accent:#e2603f;--accent-ink:#ffffff;--good:#2f8a5f;--good-bg:#e3f4ea;--bad:#c4453a;--bad-bg:#fbe5e1;--star:#f0a92a;
+  --accent:#c44c2e;--accent-ink:#ffffff;--good:#2f8a5f;--good-bg:#e3f4ea;--bad:#c4453a;--bad-bg:#fbe5e1;--star:#f0a92a;--good-btn:#1f6f48;--btn-ink:#ffffff;
   --radius:20px;--shadow:0 2px 0 var(--line);
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#1c1814;--surface:#27211c;--sunk:#322a23;--ink:#f3ebe2;--muted:#b4a698;--line:#3d342c;
-  --accent:#f27a5a;--accent-ink:#1c1814;--good:#5cc28f;--good-bg:#1f3a2c;--bad:#f0806f;--bad-bg:#43241f;--star:#f5bd4f;
+  --accent:#f27a5a;--accent-ink:#1c1814;--good:#5cc28f;--good-bg:#1f3a2c;--bad:#f0806f;--bad-bg:#43241f;--star:#f5bd4f;--good-btn:#5cc28f;--btn-ink:#1c1814;
 }}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
@@ -29,7 +29,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .big{display:block;width:100%;min-height:60px;border-radius:16px;background:var(--accent);color:var(--accent-ink);font-size:20px;font-weight:700;box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 70%,#000)}
 .big:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 70%,#000)}
-.big[disabled]{opacity:.45;cursor:default}
+.big[disabled]{background:var(--sunk);color:var(--ink);box-shadow:none;cursor:default}
 .ghost{display:block;width:100%;min-height:52px;border-radius:16px;border:2px solid var(--line);background:var(--surface);font-weight:600}
 .muted{color:var(--muted)}
 .top{display:flex;align-items:center;gap:10px;padding:6px 0 14px}
@@ -91,8 +91,10 @@ h3{font-size:15px;color:var(--muted);margin:26px 4px 10px;font-weight:600}
 .sheet.ok{background:var(--good-bg);color:var(--good)}
 .sheet.no{background:var(--bad-bg);color:var(--bad)}
 .sheet b{font-size:20px}.sheet p{margin:0;color:var(--ink)}
-.sheet .big{background:currentColor;box-shadow:none}
-.sheet .big span{color:var(--surface)}
+/* The continue button had background:currentColor, which is the button's own (accent-ink) colour: near-black in dark mode, white in light. */
+.sheet .big{box-shadow:none}
+.sheet.ok .big{background:var(--good-btn);color:var(--btn-ink)}
+.sheet.no .big{background:var(--bad);color:var(--btn-ink)}
 .mic{margin-top:4px}
 .heard{font-size:15px;color:var(--muted);min-height:1.5em}
 .tip{font-size:15px;background:var(--sunk);border-radius:14px;padding:10px 14px;text-align:left}
