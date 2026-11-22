@@ -1,0 +1,51 @@
+{
+ "schema": 1,
+ "as_of": "2026-11-23",
+ "built_at": "00:30",
+ "people": [
+  {
+   "code": "Yuna-en",
+   "name": "유나 영어",
+   "kid": true,
+   "due_today": 27,
+   "due_week": 28,
+   "mature": 6,
+   "cards": 34,
+   "next": "모찌에게 나를 소개해요",
+   "url": "Yuna-en.html"
+  },
+  {
+   "code": "wife-en",
+   "name": "아내 영어",
+   "kid": false,
+   "due_today": 30,
+   "due_week": 49,
+   "mature": 0,
+   "cards": 58,
+   "next": "나와 유나 소개하기",
+   "url": "wife-en.html"
+  },
+  {
+   "code": "Jay-en",
+   "name": "Jay 영어",
+   "kid": false,
+   "due_today": 42,
+   "due_week": 51,
+   "mature": 0,
+   "cards": 52,
+   "next": "바꿔 말해서 이해 확인하기",
+   "url": "Jay-en.html"
+  },
+  {
+   "code": "Jay-id",
+   "name": "Jay 인도네시아어",
+   "kid": false,
+   "due_today": 19,
+   "due_week": 19,
+   "mature": 0,
+   "cards": 19,
+   "next": "지연·결제 문제 보고하기: pe-an 명사와 di-…oleh 굳히기",
+   "url": "Jay-id.html"
+  }
+ ]
+}
