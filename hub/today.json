@@ -1,13 +1,13 @@
 {
  "schema": 1,
- "as_of": "2026-11-23",
- "built_at": "07:45",
+ "as_of": "2026-11-24",
+ "built_at": "00:00",
  "people": [
   {
    "code": "Yuna-en",
    "name": "유나 영어",
    "kid": true,
-   "due_today": 27,
+   "due_today": 28,
    "due_week": 28,
    "mature": 6,
    "cards": 34,
@@ -18,8 +18,8 @@
    "code": "wife-en",
    "name": "아내 영어",
    "kid": false,
-   "due_today": 22,
-   "due_week": 50,
+   "due_today": 36,
+   "due_week": 56,
    "mature": 5,
    "cards": 64,
    "next": "나와 유나 소개하기",
