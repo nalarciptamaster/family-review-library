@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "as_of": "2026-11-25",
- "built_at": "18:15",
+ "as_of": "2026-11-26",
+ "built_at": "00:00",
  "people": [
   {
    "code": "Yuna-en",
@@ -29,8 +29,8 @@
    "code": "Jay-en",
    "name": "Jay 영어",
    "kid": false,
-   "due_today": 26,
-   "due_week": 62,
+   "due_today": 46,
+   "due_week": 63,
    "mature": 2,
    "cards": 66,
    "next": "질문 받았을 때 답하고 시간 벌기",
