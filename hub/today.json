@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "as_of": "2026-11-25",
- "built_at": "11:45",
+ "built_at": "12:00",
  "people": [
   {
    "code": "Yuna-en",
@@ -30,10 +30,10 @@
    "name": "Jay 영어",
    "kid": false,
    "due_today": 34,
-   "due_week": 57,
-   "mature": 0,
+   "due_week": 56,
+   "mature": 2,
    "cards": 60,
-   "next": "바꿔 말해서 이해 확인하기",
+   "next": "질문 받았을 때 답하고 시간 벌기",
    "url": "Jay-en.html"
   },
   {
