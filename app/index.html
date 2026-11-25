@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>가족 복습</title>
+<meta name="app-version" content="9">
 <meta name="theme-color" content="#fff8ef" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -165,13 +166,25 @@ function show(...nodes){app.replaceChildren(...nodes.filter(Boolean));scrollTo(0
 
 // ---------- setup: family link #k=<key> (old links #api=..&k=..&u=.. still work) ----------
 let launch=null;
+function publicLaunch(hash,savedCfg,savedMe){
+  const p=new URLSearchParams(hash.replace(/^#/,''));
+  if(!savedCfg||!['daily','lesson','stats'].includes(p.get('m')))return null;
+  const code=p.get('u')||savedMe||savedCfg.u;
+  if(!PEOPLE.some(person=>person.code===code))return null;
+  if(p.get('m')==='lesson'&&!p.get('l'))return null;
+  return {code,m:p.get('m'),l:p.get('l')||''};
+}
 (function readLink(){
   const p=new URLSearchParams(location.hash.slice(1));
-  // The public library links to #m=stats with no key: open the saved person's 내 기록 if this browser has the family link.
-  if(!p.get('k')){if(p.get('m')==='stats'&&store.get('me',null)){launch={code:store.get('me',null),m:'stats',l:''};history.replaceState(null,'',location.pathname+location.search)}return}
+  if(!p.get('k')){
+    // Public links select this launch only: a shared browser must keep its saved owner (me).
+    launch=publicLaunch(location.hash,store.get('cfg',null),store.get('me',null));
+    if(launch)history.replaceState(null,'',location.pathname+location.search);
+    return;
+  }
   store.set('cfg',{api:p.get('api')||API_DEFAULT,k:p.get('k')});
   if(p.get('u'))store.set('me',p.get('u'));
-  // WhatsApp links say what to open: m=daily (today's set) or m=lesson&l=<lesson id> (that lesson's review).
+  // Key-bearing WhatsApp links retain their existing saved-person behavior.
   if(p.get('u')&&p.get('m'))launch={code:p.get('u'),m:p.get('m'),l:p.get('l')||''};
   history.replaceState(null,'',location.pathname+location.search);
 })();
@@ -281,7 +294,7 @@ function topBar(code){
 }
 async function home(){
   const c=cfg();if(!c)return noLink();
-  const code=store.get('me',null);if(!person(code))return pickWho();
+  const code=launch?.code||store.get('me',null);if(!person(code))return pickWho();
   document.body.classList.toggle('child',code==='Yuna-en');
   show(topBar(code),h('div',{class:'panel'},h('p',{class:'muted'},'불러오는 중…')));
   flush();
