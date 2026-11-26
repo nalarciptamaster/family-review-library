@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "as_of": "2026-11-26",
- "built_at": "00:00",
+ "built_at": "13:00",
  "people": [
   {
    "code": "Yuna-en",
@@ -18,10 +18,10 @@
    "code": "wife-en",
    "name": "아내 영어",
    "kid": false,
-   "due_today": 46,
-   "due_week": 56,
-   "mature": 5,
-   "cards": 64,
+   "due_today": 38,
+   "due_week": 54,
+   "mature": 9,
+   "cards": 70,
    "next": "나와 유나 소개하기",
    "url": "wife-en.html"
   },
