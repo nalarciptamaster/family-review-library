@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "as_of": "2026-11-26",
- "built_at": "13:00",
+ "as_of": "2026-11-27",
+ "built_at": "00:00",
  "people": [
   {
    "code": "Yuna-en",
@@ -18,7 +18,7 @@
    "code": "wife-en",
    "name": "아내 영어",
    "kid": false,
-   "due_today": 38,
+   "due_today": 42,
    "due_week": 54,
    "mature": 9,
    "cards": 70,
@@ -29,7 +29,7 @@
    "code": "Jay-en",
    "name": "Jay 영어",
    "kid": false,
-   "due_today": 46,
+   "due_today": 52,
    "due_week": 63,
    "mature": 2,
    "cards": 66,
