@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "as_of": "2026-11-27",
- "built_at": "08:30",
+ "built_at": "16:41",
  "people": [
   {
    "code": "Yuna-en",
@@ -12,6 +12,7 @@
    "mature": 6,
    "cards": 34,
    "next": "모찌에게 나를 소개해요",
+   "streak": 0,
    "url": "Yuna-en.html"
   },
   {
@@ -23,6 +24,7 @@
    "mature": 9,
    "cards": 70,
    "next": "나와 유나 소개하기",
+   "streak": 1,
    "url": "wife-en.html"
   },
   {
@@ -34,6 +36,7 @@
    "mature": 2,
    "cards": 72,
    "next": "질문 받았을 때 답하고 시간 벌기",
+   "streak": 1,
    "url": "Jay-en.html"
   },
   {
@@ -45,6 +48,7 @@
    "mature": 0,
    "cards": 25,
    "next": "지연·결제 문제 보고하기: pe-an 명사와 di-…oleh 굳히기",
+   "streak": 1,
    "url": "Jay-id.html"
   }
  ]
