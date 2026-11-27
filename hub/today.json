@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "as_of": "2026-11-27",
- "built_at": "16:41",
+ "as_of": "2026-11-28",
+ "built_at": "00:02",
  "people": [
   {
    "code": "Yuna-en",
@@ -19,20 +19,20 @@
    "code": "wife-en",
    "name": "아내 영어",
    "kid": false,
-   "due_today": 42,
+   "due_today": 48,
    "due_week": 54,
    "mature": 9,
    "cards": 70,
    "next": "나와 유나 소개하기",
-   "streak": 1,
+   "streak": 0,
    "url": "wife-en.html"
   },
   {
    "code": "Jay-en",
    "name": "Jay 영어",
    "kid": false,
-   "due_today": 44,
-   "due_week": 68,
+   "due_today": 47,
+   "due_week": 69,
    "mature": 2,
    "cards": 72,
    "next": "질문 받았을 때 답하고 시간 벌기",
@@ -43,7 +43,7 @@
    "code": "Jay-id",
    "name": "Jay 인도네시아어",
    "kid": false,
-   "due_today": 11,
+   "due_today": 14,
    "due_week": 25,
    "mature": 0,
    "cards": 25,
