@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "as_of": "2026-11-27",
- "built_at": "00:00",
+ "built_at": "08:30",
  "people": [
   {
    "code": "Yuna-en",
@@ -29,10 +29,10 @@
    "code": "Jay-en",
    "name": "Jay 영어",
    "kid": false,
-   "due_today": 52,
-   "due_week": 63,
+   "due_today": 44,
+   "due_week": 68,
    "mature": 2,
-   "cards": 66,
+   "cards": 72,
    "next": "질문 받았을 때 답하고 시간 벌기",
    "url": "Jay-en.html"
   },
@@ -40,10 +40,10 @@
    "code": "Jay-id",
    "name": "Jay 인도네시아어",
    "kid": false,
-   "due_today": 19,
-   "due_week": 19,
+   "due_today": 11,
+   "due_week": 25,
    "mature": 0,
-   "cards": 19,
+   "cards": 25,
    "next": "지연·결제 문제 보고하기: pe-an 명사와 di-…oleh 굳히기",
    "url": "Jay-id.html"
   }
